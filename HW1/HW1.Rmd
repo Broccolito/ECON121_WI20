@@ -1,0 +1,318 @@
+---
+title: "ECON 121 HW1"
+author: "Wanjun Gu"
+date: "1/31/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+### Import all the libraries and data
+```{r setup, include = TRUE, error=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(foreign)
+library(readxl)
+library(readstata13)
+library(knitr)
+library(ggplot2)
+ps1_cps = read_xlsx(path = "ps1_cps.xlsx")
+nlsy = read.dta13(file = "nlsy79.dta")
+```
+
+## Question 1
+
+In the Mincerian Wage Equation: $ln(w_{i}) = \beta_{0} + \beta_{1}ed_{i} + \beta_{3}exper_{i} + \beta_{4}exper^{2} + \epsilon_{i}$, $\beta_1$ means the education wage return given the same years of experience. Or, with same years of experience, how much more (in log scale) does the individuals with one more year of education earn. The reason why experience has a square term $exper^2$ is because people expect the return of experience to be non-linear. That is, people would normally expect the more experience one tends to have, the more valuable the experience is.
+
+## Question 2
+```{r Q2, include=TRUE, error=FALSE}
+# Data Processing
+cps = as.data.frame(read_excel(path = "ps1_cps.xlsx"))
+educ_yr = cbind(c("Associate's degree, occupational/vocational program",
+                  "Master's degree"                                    ,
+                  "Grades 7 or 8"                                      ,
+                  "High school diploma or equivalent"                  ,
+                  "Bachelor's degree"                                  ,
+                  "Some college but no degree"                         ,
+                  "Doctorate degree"                                   ,
+                  "12th grade, no diploma"                             ,
+                  "Associate's degree, academic program"               ,
+                  "Grade 10"                                           ,
+                  "Grade 11"                                           ,
+                  "None or preschool"                                  ,
+                  "Professional school degree"                         ,
+                  "Grade 9"                                            ,
+                  "Grades 1, 2, 3, or 4"                               ,
+                  "Grades 5 or 6"  ), 
+                c(16, 18, 7.5, 12, 16, 15,
+                  22, 12, 14, 10, 11, 0,
+                  14, 9, 2.5, 5.5))
+
+cps$uhrsworkt = as.numeric(cps$uhrsworkt) # Assign NA if work hour varies
+assign_educ = function(x){
+  return(educ_yr[which(x == educ_yr[,1]),2])
+}
+cps$educ = as.numeric(sapply(cps$educ, assign_educ))
+cps$age = as.numeric(cps$age)
+cps$sex = as.factor(cps$sex)
+cps$exper = cps$age - cps$educ - 5
+cps$exper2 = cps$exper^2
+cps$white = as.numeric(cps$race == "White")
+cps$black = as.numeric(cps$race == "Black/Negro")
+cps$other = as.numeric(cps$race != "White" & cps$race != "Black/Negro")
+cps$race = as.factor(cps$race)
+cps$hwage = log(cps$incwage / (cps$uhrsworkt * cps$wkswork1))
+cps$hwage[cps$hwage == -Inf] = 0
+cps = na.omit(cps) # Get rid of all the NA values
+cps = cps[cps$uhrsworkt >= 35 & cps$wkswork1 >= 50,] # Get rid of part-time
+kable(head(cps)) # Display data
+summary(cps) # Summarize data
+
+```
+
+## Question 3
+```{r Q3, include=TRUE, error=FALSE}
+kable(summary(lm(data = cps, hwage ~ educ + exper + exper2))$coefficient)
+
+```
+
+Based on the regression results, the return of education is $0.1\%$ increase of wage for one year of education.
+
+## Question 4
+```{r Q4, include=TRUE, error=FALSE}
+kable(summary(lm(data = cps, hwage ~ white + black + sex + educ + exper + exper2))$coefficient)
+
+```
+
+The regression result shows that after controling for sex and race,
+the coefficient on education becomes more significant. Also,
+the sex and age variable themselves are significantly correlated with
+wage. This indicates that sex and age differences also explains variations
+in wage return of education and they also explains wage differences.
+
+## Question 5
+```{r Q5, include=TRUE, error=FALSE}
+l = summary(lm(data = cps, hwage ~ white + black + sex + educ + exper + exper2))$coefficient
+white_coef = l[2,1]
+white_se = l[2,2]
+male_coef = l[4,1]
+male_sd = l[4,2]
+se = (white_se^2+male_sd^2)^0.5
+t_score = (white_coef - male_coef)/se
+print(t_score)
+```
+
+As the result shows, t statistics is way greater than 1.96, therefore the differnece is significant.
+
+## Question 6
+```{r Q6, include=TRUE, error=FALSE}
+cps_male = cps[cps$sex == "Male",]
+cps_female = cps[cps$sex == "Female",]
+ml = summary(lm(data = cps_male, hwage ~ white + black + educ + exper + exper2))$coefficient
+fl = summary(lm(data = cps_female, hwage ~ white + black + educ + exper + exper2))$coefficient
+print("Regression results for males")
+kable(ml)
+print("Regression results for females")
+kable(fl)
+
+```
+
+Although there is no way to synthesize the standard error of the two coefficients of male and female since the samples are innately different, we can use bootstrap to determine the standard deviation of the difference between the two samples.
+
+```{r Q6b, include=TRUE, error=FALSE}
+# Construct a bootstrap engine
+dl_list = vector()
+for(i in 1:1000){
+  cps_male_sample = cps_male[sample(1:dim(cps_male)[1], 1000, replace = TRUE),]
+  cps_female_sample = cps_male[sample(1:dim(cps_female)[1], 1000, replace = TRUE),]
+  ml = summary(lm(data = cps_male_sample, hwage ~ white + black + educ + exper + exper2))$coefficient
+  fl = summary(lm(data = cps_female_sample, hwage ~ white + black + educ + exper + exper2))$coefficient
+  dl = ml - fl
+  dl_list = c(dl_list, dl)
+}
+hist(dl, breaks = 50, main = "Distribution of the coefficient difference",
+     xlab = "Coefficient difference")
+print(paste0("Mean Difference: ", mean(dl)))
+print(paste0("Difference SE: ", sd(dl)))
+```
+
+As shown in the bootstap result, the difference is not sigificant. Therefore, the education returns in male and female seperately are not statistically significant.
+
+## Question 7
+```{r Q7, include=TRUE, error=FALSE}
+
+cps$male = as.numeric(as.factor(cps$sex)) - 1
+interact_l = summary(lm(data = cps, hwage ~ white + black + educ + exper + exper2 + I(male*educ)))$coefficient
+kable(interact_l)
+
+```
+
+The result got from Q7 is the same the one from Q6. This suggests that the results got from bootstap and interaction variable are the same.
+
+## Question 8
+
+```{r Q8, include=TRUE, error=FALSE}
+
+# Display data
+kable(head(nlsy[,1:8]))
+
+# Unweighted summary
+black = na.omit(nlsy$black)
+hisp = na.omit(nlsy$hisp)
+
+black_mean = sum(black, na.rm = TRUE)/length(black)
+hisp_mean = sum(hisp, na.rm = TRUE)/length(hisp)
+
+black_sd = ((black_mean * (1-black_mean))/length(black))^0.5
+hisp_sd = ((hisp_mean * (1-hisp_mean))/length(hisp))^0.5
+
+
+#Weighted summary
+black_mean_weight = sum(black*nlsy$perweight, na.rm = TRUE)/sum(nlsy$perweight)
+hisp_mean_weight = sum(hisp*nlsy$perweight, na.rm = TRUE)/sum(nlsy$perweight)
+
+black_sd_weight = ((black_mean_weight * (1-black_mean_weight))/length(black))^0.5
+hisp_sd_weight = ((hisp_mean_weight * (1-hisp_mean_weight))/length(hisp))^0.5
+
+Q8 = data.frame(
+  black_mean = sum(black, na.rm = TRUE)/length(black),
+  hisp_mean = sum(hisp, na.rm = TRUE)/length(hisp),
+  
+  black_sd = ((black_mean * (1-black_mean))/length(black))^0.5,
+  hisp_sd = ((hisp_mean * (1-hisp_mean))/length(hisp))^0.5,
+  
+  
+  #Weighted summary
+  black_mean_weight = sum(black*nlsy$perweight, na.rm = TRUE)/sum(nlsy$perweight),
+  hisp_mean_weight = sum(hisp*nlsy$perweight, na.rm = TRUE)/sum(nlsy$perweight),
+  
+  black_sd_weight = ((black_mean_weight * (1-black_mean_weight))/length(black))^0.5,
+  hisp_sd_weight = ((hisp_mean_weight * (1-hisp_mean_weight))/length(hisp))^0.5)
+
+kable(Q8)
+```
+
+The weighted summary better discribes the population ratio becuase in the unweighted sampings, due to the fact that black and hispanics are Ethnic minorities, they are upsampled and therefore over-represented Considering weight can eliminate the differences.
+
+## Question 9
+```{r Q9, include=TRUE, error=FALSE}
+hour_wage = log(nlsy$laborinc07/nlsy$hours07)
+hour_wage[hour_wage == -Inf] = 0
+
+experience = nlsy$age79 + 28 - nlsy$educ - 5
+
+nlsy_plus = cbind(nlsy, experience, hour_wage)
+nlsy_plus = subset(nlsy_plus, hours07 > 1750)
+nlsy_plus = na.omit(nlsy_plus)
+
+rm(experience, hour_wage)
+
+# For black
+print("Unweighted summary for the black")
+kable(summary(lm(data = nlsy_plus, hour_wage ~ educ + 
+                   I(experience^2) + 
+                   experience + black + male))$coefficient)
+print("Weighted summary for the black")
+kable(summary(lm(data = nlsy_plus, hour_wage ~ educ + 
+                   I(experience^2) + 
+                   experience + black + male, weights = perweight))$coefficient)
+
+# For Hispanic
+print("Unweighted summary for the hispanic")
+kable(summary(lm(data = nlsy_plus, hour_wage ~ educ + 
+                   I(experience^2) + 
+                   experience + hisp + male))$coefficient)
+print("Weighted summary for the hispanic")
+kable(summary(lm(data = nlsy_plus, hour_wage ~ educ + 
+                   I(experience^2) + 
+                   experience + hisp + male, weights = perweight))$coefficient)
+```
+
+The usage of sampling weight can slightly change the coefficient and increase the standard error of the statistics. However, Weighted regression is preferred because it takes consideration of the Over sampling of minority populations such as hispanic or black. Therefore, I prefer the weighted regression.
+
+## Question 10
+
+```{r Q10, include=TRUE, error=FALSE}
+ggplot(data = nlsy_plus, aes(x = experience, y = hour_wage)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", color = "black") + 
+  xlab("Experience") + 
+  ylab("Log(Hourly Wage)")
+
+```
+
+The coefficient of education obtained from NLSY is similar to the coefficient of education
+obtained from CPS. Both are similar to around 0.13. However, the coefficients of experience
+and experience^2 are different acrosstwo datasets. Particularly, the coefficients from NLSY
+is negative, which is realistically unlikely. This suggests that either:
+- The two samples are innately different in terms of populaiton component
+- The way how part-time workers and non-working force are excluded influences
+the result. In NLSY, workers who work for less than 1750 hours are dropped 
+however in CPS, workers who work less than 35 hours per week or less than 50 
+weeks per year are dropped.
+
+## Question 11
+I think $\beta_1$ does not represent the causal effect of education.
+This is because although the correlation between education and hour
+wage is found to be significant. There is no evidence indicating 
+causality. In fact, there may be many other variables correlated
+with both education and wage that are ommited in this regression For
+instance, family income is traditionally believed to be correlated with
+education because richer households tend to afford more education.
+Wealth status is also related to wage given that difference in parents'
+income may suggest difference in access to resources. Therefore, we
+cannot prove that the regression is not subjective to ommited variable
+bias and we cannot determin causal correlation.
+
+## Question 12
+
+```{r Q12, include=TRUE, error=FALSE}
+kable(summary(lm(data = nlsy_plus, hour_wage ~ educ + 
+                   I(experience^2) + 
+                   experience + black + hisp + male))$coefficient)
+
+kable(summary(lm(data = nlsy_plus, hour_wage ~ educ + 
+                   I(experience^2) + 
+                   experience + black + hisp + male +
+                   urban14 + afqt81))$coefficient)
+
+```
+
+|                |   Estimate| Std. Error|   t value| Pr(>&#124;t&#124;)|
+|:---------------|----------:|----------:|---------:|------------------:|
+|(Intercept)     |  2.7527504|  0.6590189|  4.177043|          0.0000302|
+|educ            |  0.1245644|  0.0084399| 14.758978|          0.0000000|
+|I(experience^2) |  0.0026805|  0.0008248|  3.249907|          0.0011644|
+|experience      | -0.1361035|  0.0448682| -3.033405|          0.0024344|
+|black           | -0.2298632|  0.0329400| -6.978241|          0.0000000|
+|hisp            | -0.0483787|  0.0387629| -1.248066|          0.2120835|
+|male            |  0.2630655|  0.0278449|  9.447518|          0.0000000|
+
+
+|                |   Estimate| Std. Error|   t value| Pr(>&#124;t&#124;)|
+|:---------------|----------:|----------:|---------:|------------------:|
+|(Intercept)     |  3.7232917|  0.6551837|  5.682821|          0.0000000|
+|educ            |  0.0662963|  0.0098559|  6.726588|          0.0000000|
+|I(experience^2) |  0.0030033|  0.0008127|  3.695461|          0.0002226|
+|experience      | -0.1672974|  0.0442697| -3.779045|          0.0001598|
+|black           | -0.0424899|  0.0370793| -1.145918|          0.2519008|
+|hisp            |  0.0709117|  0.0403266|  1.758437|          0.0787533|
+|male            |  0.2288108|  0.0275976|  8.290959|          0.0000000|
+|urban14         |  0.0660547|  0.0331545|  1.992329|          0.0464061|
+|afqt81          |  0.0073370|  0.0006767| 10.843085|          0.0000000|
+
+I think living at urban places at the age of 14 and AFQT should
+be included in the regression. As the statistics shows, the
+coefficients of both Urban14 and AFQT81 are significant. As an
+explaination, the AFQT score is a good indicator of one's cognitive
+ability and should be correlated with earning, since we expect smart
+people to earn more. Also living in urban environment at a early age
+can be significant to access to resource and education quality.
+Therefore, I expect these two factors to be added to the regression.
+
+## Question 13
+In a natural experiment or survey setting, it's hard for OLS 
+to indicate causal relationship because non of the conditons
+are randomly assigned. Therefore, it is hard to include/control
+all the variables that are potentially correlated with the error
+term. The coefficients are thus only good for passvie prediction
+but not causation.

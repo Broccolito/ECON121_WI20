@@ -1,0 +1,175 @@
+---
+title: "ECON 121 HW2"
+author: "Wanjun Gu"
+date: "2/11/2020"
+output: html_document
+---
+
+```{r setup, include = TRUE}
+# Import the required packages
+knitr::opts_chunk$set(echo = TRUE, fig.width=12, fig.height=8)
+library(here)
+library(readstata13)
+library(ggplot2)
+library(gridExtra)
+library(margins)
+library(knitr)
+library(MASS)
+
+# Clear workspace
+graphics.off()
+rm(list = ls())
+
+# Import data
+suppressWarnings({
+  nhis = read.dta13(file = "nhis2000.dta", nonint.factors = TRUE)
+})
+
+```
+
+## Problem 1
+
+```{r Q1}
+nhis$unhealthy = ifelse((nhis$health == "Poor" | 
+                           nhis$health == "Fair"), 1, 0)
+```
+
+## Problem 2
+
+```{r Q2}
+nhis$faminc_level = ifelse(nhis$faminc_gt75 == 1, "High",
+                           ifelse(nhis$faminc_20t75 == 1, "Medium", "Low"))
+nhis$faminc_level = factor(nhis$faminc_level, 
+                           levels = c("Low", "Medium", "High"))
+nhis$educ_level = ifelse(nhis$edyrs < 12, "less_than_high_school",
+                         ifelse(nhis$edyrs == 12, "high_school",
+                                ifelse(nhis$edyrs >= 13 & nhis$edyrs <= 15, "some_college",
+                                       ifelse(nhis$edyrs == 16, "complete_college",
+                                              ifelse(nhis$edyrs > 16, "post_grad", NA)))))
+nhis$educ_level = factor(nhis$educ_level, 
+                         levels = c("less_than_high_school",
+                                    "high_school",
+                                    "some_college",
+                                    "complete_college",
+                                    "post_grad"))
+
+nhis = na.omit(nhis)
+p1 = ggplot(data = nhis, aes(x = faminc_level, y = mort5)) + 
+  geom_bar(stat = "summary", fun.y = "mean") + 
+  facet_grid(rows = nhis$sex) + 
+  xlab("Level of Family Income") + 
+  ylab("Rate of mortality")
+p2 = ggplot(data = nhis, aes(x = faminc_level, y = unhealthy)) + 
+  geom_bar(stat = "summary", fun.y = "mean") + 
+  facet_grid(rows = nhis$sex) + 
+  xlab("Level of Family Income") +  
+  ylab("Fair/poor health")
+p3 = ggplot(data = nhis, aes(x = educ_level, y = mort5)) + 
+  geom_bar(stat = "summary", fun.y = "mean") + 
+  facet_grid(rows = nhis$sex) + 
+  xlab("Education Level") + 
+  ylab("Rate of mortality")
+p4 = ggplot(data = nhis, aes(x = educ_level, y = unhealthy)) + 
+  geom_bar(stat = "summary", fun.y = "mean") + 
+  facet_grid(rows = nhis$sex) + 
+  xlab("Education Level") + 
+  ylab("Fair/poor health")
+p5 = grid.arrange(p1,p2,p3,p4, nrow = 2)
+```
+
+## Problem 3
+
+```{r Q3}
+nhis$age = as.numeric(nhis$age)
+nhis$age[is.na(nhis$age)] = 85
+nhis$faminc_20less = ifelse(nhis$faminc_gt75 == 1, 0,
+                            ifelse(nhis$faminc_20t75 == 1, 0, 1))
+
+fm1 = (mort5 ~ age + white + black + hisp + edyrs + faminc_level)
+lp1 = summary(lm(data = nhis, fm1))$coefficient
+pb1 = summary(glm(data = nhis, fm1, family = binomial(link = "probit")))$coefficient
+pbm1 = margins(glm(data = nhis, fm1, family = binomial(link = "probit")))
+lg1 = summary(glm(data = nhis, fm1, family = binomial(link = "logit")))$coefficient
+lgm1 = margins(glm(data = nhis, fm1, family = binomial(link = "logit")))
+
+fm2 = (unhealthy ~ age + white + black + hisp + edyrs + faminc_level)
+lp2 = summary(lm(data = nhis, fm2))$coefficient
+pb2 = summary(glm(data = nhis, fm2, family = binomial(link = "probit")))$coefficient
+pbm2 = margins(glm(data = nhis, fm2, family = binomial(link = "probit")))
+lg2 = summary(glm(data = nhis, fm2, family = binomial(link = "logit")))$coefficient
+lgm2 = margins(glm(data = nhis, fm2, family = binomial(link = "logit")))
+```
+
+For both models to predict rate of mortality and fair/poor health, I used the formula:
+``` mort5 ~ age + white + black + hisp + edyrs + faminc_level ```
+and
+```unhealthy ~ age + white + black + hisp + edyrs + faminc_level ```
+respectively. I believe age, race and years of education should be included in the regression as control variables because they are all potentially correlated with mortality and unhealthy rates. As the results have proven, most of the coefficients of these controlled variables are significant. Furthermore, as race/ethnicity is included, “other” is omitted to avoid perfect collinearity. Family income level is a factor with three different levels (High, Medium, Low). In this syntax, each single factor is paneled (Low is omitted again to avoid perfect collinearity).
+The marginal effects of the probit and logit models are calculated. As expected, the results of LP, probit and logit models are similar since the outcome is binary. With that said, the intercepts are not numerically the same since they represent different meanings in different regressions. An unexpecting complication is revealed that when predicting rates of mortality using all three models, neither the coefficient of white nor black is significantly different from zero. Interestingly, the coefficient of hisp is significant. This indicates that after controlling for education and age, race and ethnicity does not explain much variation of rates of mortality. However, Hispanics tend to have lower mortality. On the same note, for the prediction of unhealthy rate, race tends to have a significant impact, especially if the subject is white or black.
+
+
+## Problem 4
+
+In this question, we are assuming that the population demographics are either white or black (mutually exclusive).
+Using the logit model from problem 3, we can acquire the difference in coefficients in the regression. However, the t score is smaller than the significant threshold thus the difference cannot be proven significant from the regression model.
+we know that it is hard to compare high-income African Americans with low-income whites in terms of mortality rates because the results on the race/ethnicity are not significant. However, with that said, I also believe that using the regression model to compare the effect size is not appropriate since the regression model used in problem 3 controlled for years of education and age, which are likely demographic characteristics of the white and African Americans. Thus, not controlling for these variables is a better way to make passive prediction.
+
+
+```{r Q4}
+kable(lg1)
+black_white_diff = lg1[3,1] - (lg1[4,1] + lg1[8,1])
+black_white_std = (lg1[3,1]^2 + lg1[4,1]^2 + lg1[8,1]^2)^0.5
+t_score = black_white_diff/black_white_std
+print(t_score)
+
+black_rich = nhis[nhis$black == 1 & nhis$faminc_level == "High",]$mort5
+white_poor = nhis[nhis$white == 1 & nhis$faminc_level == "Low",]$mort5
+t.test(black_rich, white_poor)
+```
+
+As the result shows, whites with low income has a significantly higher mortality rate.
+
+## Problem 5
+
+The coefficients should not be considered as causal. This is because as much as we would like to control for all extraneous variables to eliminate omitted variable bias, we are never certain that there are no other variables that effects mortality rates and are correlated with family income. 
+
+## Problem 6
+
+```{r Q6}
+fm3 = (mort5 ~ age + white + black + hisp + edyrs + faminc_level + hypertenev + smokev + diabeticev)
+lg3 = glm(data = nhis, fm3, family = binomial(link = "logit"))
+summary(lg3)$coefficients
+```
+
+On top the variables that I used from problem 3, I added three more variables into the logit regression: hypertension, smoke and diabetic, each significantly correlated to the mortality rate. Moreover, all three variables have positive coefficients. This means that smoking, hypertension and diabetics are all correlated to high mortality rates. In particular, the presence of smoking, hypertension and diabetics increase the odd ratio of dying within five years after the study by 30, 84 and 62 percent.
+
+## Problem 7
+
+```{r Q7}
+nhis$health_level = ifelse(nhis$health == "Poor", 1,
+                           ifelse(nhis$health == "Fair", 2,
+                                  ifelse(nhis$health == "Good", 3,
+                                         ifelse(nhis$health == "Very Good", 4, 
+                                                ifelse(nhis$health == "Excellent", 5, NA))))) 
+fm4 = mort5 ~ health_level
+summary(lm(data = nhis, fm4))$coefficient
+p6 = ggplot(data = nhis, aes(x = health_level, y = mort5)) + 
+  geom_bar(stat = "summary", fun.y = "mean") + 
+  facet_grid(rows = nhis$sex) + 
+  xlab("Level of Self-reported health") + 
+  ylab("Rate of mortality")
+p6
+```
+
+As the regression shows, self-reported health condition is strongly correlated with mortality rate: self-reported healthier people tend to have lower mortality rates. This is also demonstrated in the graph. The graph shows that not only the correlated is substantiated, the relationship is as well monotonic. The healthier people report themselves to be, the lower their mortality rates tend to be.
+
+## Problem 8
+
+```{r Q8}
+fm5 = (health_level ~ age + white + black + hisp + edyrs + faminc_level)
+nhis$health_level = as.factor(nhis$health_level)
+pb3 = polr(data = nhis, fm5)
+kable(summary(pb3)$coefficient)
+```
+
+As the new regression shows, the results are similar to the probit regression result from question 3, where all the health status levels are concatenated into binary variables. In fact, the results from this question should only be comparable to the results from the probit regression from question 3.

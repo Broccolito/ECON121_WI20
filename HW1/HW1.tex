@@ -1,0 +1,852 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={ECON 121 HW1},
+  pdfauthor={Wanjun Gu},
+  pdfborder={0 0 0},
+  breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-2}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{ECON 121 HW1}
+\author{Wanjun Gu}
+\date{1/31/2020}
+
+\begin{document}
+\maketitle
+
+\hypertarget{import-all-the-libraries-and-data}{%
+\subsubsection{Import all the libraries and
+data}\label{import-all-the-libraries-and-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(foreign)}
+\KeywordTok{library}\NormalTok{(readxl)}
+\KeywordTok{library}\NormalTok{(readstata13)}
+\KeywordTok{library}\NormalTok{(knitr)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\NormalTok{ps1_cps =}\StringTok{ }\KeywordTok{read_xlsx}\NormalTok{(}\DataTypeTok{path =} \StringTok{"ps1_cps.xlsx"}\NormalTok{)}
+\NormalTok{nlsy =}\StringTok{ }\KeywordTok{read.dta13}\NormalTok{(}\DataTypeTok{file =} \StringTok{"nlsy79.dta"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-1}{%
+\subsection{Question 1}\label{question-1}}
+
+In the Mincerian Wage Equation:
+\(ln(w_{i}) = \beta_{0} + \beta_{1}ed_{i} + \beta_{3}exper_{i} + \beta_{4}exper^{2} + \epsilon_{i}\),
+\(\beta_1\) means the education wage return given the same years of
+experience. Or, with same years of experience, how much more (in log
+scale) does the individuals with one more year of education earn. The
+reason why experience has a square term \(exper^2\) is because people
+expect the return of experience to be non-linear. That is, people would
+normally expect the more experience one tends to have, the more valuable
+the experience is.
+
+\hypertarget{question-2}{%
+\subsection{Question 2}\label{question-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Data Processing}
+\NormalTok{cps =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{read_excel}\NormalTok{(}\DataTypeTok{path =} \StringTok{"ps1_cps.xlsx"}\NormalTok{))}
+\NormalTok{educ_yr =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Associate's degree, occupational/vocational program"}\NormalTok{,}
+                  \StringTok{"Master's degree"}\NormalTok{                                    ,}
+                  \StringTok{"Grades 7 or 8"}\NormalTok{                                      ,}
+                  \StringTok{"High school diploma or equivalent"}\NormalTok{                  ,}
+                  \StringTok{"Bachelor's degree"}\NormalTok{                                  ,}
+                  \StringTok{"Some college but no degree"}\NormalTok{                         ,}
+                  \StringTok{"Doctorate degree"}\NormalTok{                                   ,}
+                  \StringTok{"12th grade, no diploma"}\NormalTok{                             ,}
+                  \StringTok{"Associate's degree, academic program"}\NormalTok{               ,}
+                  \StringTok{"Grade 10"}\NormalTok{                                           ,}
+                  \StringTok{"Grade 11"}\NormalTok{                                           ,}
+                  \StringTok{"None or preschool"}\NormalTok{                                  ,}
+                  \StringTok{"Professional school degree"}\NormalTok{                         ,}
+                  \StringTok{"Grade 9"}\NormalTok{                                            ,}
+                  \StringTok{"Grades 1, 2, 3, or 4"}\NormalTok{                               ,}
+                  \StringTok{"Grades 5 or 6"}\NormalTok{  ), }
+                \KeywordTok{c}\NormalTok{(}\DecValTok{16}\NormalTok{, }\DecValTok{18}\NormalTok{, }\FloatTok{7.5}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{16}\NormalTok{, }\DecValTok{15}\NormalTok{,}
+                  \DecValTok{22}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{14}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                  \DecValTok{14}\NormalTok{, }\DecValTok{9}\NormalTok{, }\FloatTok{2.5}\NormalTok{, }\FloatTok{5.5}\NormalTok{))}
+
+\NormalTok{cps}\OperatorTok{$}\NormalTok{uhrsworkt =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(cps}\OperatorTok{$}\NormalTok{uhrsworkt) }\CommentTok{# Assign NA if work hour varies}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: NAs introduced by coercion
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{assign_educ =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x)\{}
+  \KeywordTok{return}\NormalTok{(educ_yr[}\KeywordTok{which}\NormalTok{(x }\OperatorTok{==}\StringTok{ }\NormalTok{educ_yr[,}\DecValTok{1}\NormalTok{]),}\DecValTok{2}\NormalTok{])}
+\NormalTok{\}}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{educ =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{sapply}\NormalTok{(cps}\OperatorTok{$}\NormalTok{educ, assign_educ))}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{age =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(cps}\OperatorTok{$}\NormalTok{age)}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{sex =}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(cps}\OperatorTok{$}\NormalTok{sex)}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{exper =}\StringTok{ }\NormalTok{cps}\OperatorTok{$}\NormalTok{age }\OperatorTok{-}\StringTok{ }\NormalTok{cps}\OperatorTok{$}\NormalTok{educ }\OperatorTok{-}\StringTok{ }\DecValTok{5}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{exper2 =}\StringTok{ }\NormalTok{cps}\OperatorTok{$}\NormalTok{exper}\OperatorTok{^}\DecValTok{2}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{white =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(cps}\OperatorTok{$}\NormalTok{race }\OperatorTok{==}\StringTok{ "White"}\NormalTok{)}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{black =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(cps}\OperatorTok{$}\NormalTok{race }\OperatorTok{==}\StringTok{ "Black/Negro"}\NormalTok{)}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{other =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(cps}\OperatorTok{$}\NormalTok{race }\OperatorTok{!=}\StringTok{ "White"} \OperatorTok{&}\StringTok{ }\NormalTok{cps}\OperatorTok{$}\NormalTok{race }\OperatorTok{!=}\StringTok{ "Black/Negro"}\NormalTok{)}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{race =}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(cps}\OperatorTok{$}\NormalTok{race)}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{hwage =}\StringTok{ }\KeywordTok{log}\NormalTok{(cps}\OperatorTok{$}\NormalTok{incwage }\OperatorTok{/}\StringTok{ }\NormalTok{(cps}\OperatorTok{$}\NormalTok{uhrsworkt }\OperatorTok{*}\StringTok{ }\NormalTok{cps}\OperatorTok{$}\NormalTok{wkswork1))}
+\NormalTok{cps}\OperatorTok{$}\NormalTok{hwage[cps}\OperatorTok{$}\NormalTok{hwage }\OperatorTok{==}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}\NormalTok{] =}\StringTok{ }\DecValTok{0}
+\NormalTok{cps =}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(cps) }\CommentTok{# Get rid of all the NA values}
+\NormalTok{cps =}\StringTok{ }\NormalTok{cps[cps}\OperatorTok{$}\NormalTok{uhrsworkt }\OperatorTok{>=}\StringTok{ }\DecValTok{35} \OperatorTok{&}\StringTok{ }\NormalTok{cps}\OperatorTok{$}\NormalTok{wkswork1 }\OperatorTok{>=}\StringTok{ }\DecValTok{50}\NormalTok{,] }\CommentTok{# Get rid of part-time}
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{head}\NormalTok{(cps)) }\CommentTok{# Display data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrllrrrrrrrrrr@{}}
+\toprule
+& age & sex & race & uhrsworkt & educ & wkswork1 & incwage & exper &
+exper2 & white & black & other & hwage\tabularnewline
+\midrule
+\endhead
+2 & 55 & Female & White & 40 & 18 & 52 & 56000 & 32 & 1024 & 1 & 0 & 0 &
+3.292984\tabularnewline
+6 & 59 & Male & White & 50 & 12 & 52 & 50000 & 42 & 1764 & 1 & 0 & 0 &
+2.956512\tabularnewline
+7 & 29 & Male & White & 45 & 12 & 52 & 40000 & 12 & 144 & 1 & 0 & 0 &
+2.838729\tabularnewline
+8 & 30 & Female & White & 40 & 16 & 52 & 30000 & 9 & 81 & 1 & 0 & 0 &
+2.668830\tabularnewline
+9 & 40 & Male & White & 50 & 15 & 52 & 0 & 20 & 400 & 1 & 0 & 0 &
+0.000000\tabularnewline
+10 & 46 & Female & White & 40 & 16 & 52 & 45000 & 25 & 625 & 1 & 0 & 0 &
+3.074295\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(cps) }\CommentTok{# Summarize data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       age            sex                                    race      
+##  Min.   :25.00   Female:22495   White                         :39825  
+##  1st Qu.:35.00   Male  :28784   Black/Negro                   : 5923  
+##  Median :43.00                  Asian only                    : 3717  
+##  Mean   :43.41                  American Indian/Aleut/Eskimo  :  634  
+##  3rd Qu.:52.00                  White-American Indian         :  342  
+##  Max.   :64.00                  Hawaiian/Pacific Islander only:  268  
+##                                 (Other)                       :  570  
+##    uhrsworkt          educ          wkswork1        incwage       
+##  Min.   : 35.0   Min.   : 0.00   Min.   :50.00   Min.   :      0  
+##  1st Qu.: 40.0   1st Qu.:12.00   1st Qu.:52.00   1st Qu.:  30000  
+##  Median : 40.0   Median :15.00   Median :52.00   Median :  48500  
+##  Mean   : 43.5   Mean   :14.57   Mean   :51.95   Mean   :  64346  
+##  3rd Qu.: 45.0   3rd Qu.:16.00   3rd Qu.:52.00   3rd Qu.:  75002  
+##  Max.   :170.0   Max.   :22.00   Max.   :52.00   Max.   :1609999  
+##                                                                   
+##      exper           exper2           white            black       
+##  Min.   :-2.00   Min.   :   0.0   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:15.00   1st Qu.: 225.0   1st Qu.:1.0000   1st Qu.:0.0000  
+##  Median :23.00   Median : 529.0   Median :1.0000   Median :0.0000  
+##  Mean   :23.84   Mean   : 691.6   Mean   :0.7766   Mean   :0.1155  
+##  3rd Qu.:33.00   3rd Qu.:1089.0   3rd Qu.:1.0000   3rd Qu.:0.0000  
+##  Max.   :58.00   Max.   :3364.0   Max.   :1.0000   Max.   :1.0000  
+##                                                                    
+##      other            hwage       
+##  Min.   :0.0000   Min.   :-6.254  
+##  1st Qu.:0.0000   1st Qu.: 2.668  
+##  Median :0.0000   Median : 3.074  
+##  Mean   :0.1079   Mean   : 2.996  
+##  3rd Qu.:0.0000   3rd Qu.: 3.520  
+##  Max.   :1.0000   Max.   : 6.428  
+## 
+\end{verbatim}
+
+\hypertarget{question-3}{%
+\subsection{Question 3}\label{question-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2))}\OperatorTok{$}\NormalTok{coefficient)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 1.2566103 & 0.0292396 & 42.976331 & 0\tabularnewline
+educ & 0.1028490 & 0.0014890 & 69.072179 & 0\tabularnewline
+exper & 0.0181678 & 0.0016023 & 11.338398 & 0\tabularnewline
+exper2 & -0.0002787 & 0.0000319 & -8.741979 & 0\tabularnewline
+\bottomrule
+\end{longtable}
+
+Based on the regression results, the return of education is \(0.1\%\)
+increase of wage for one year of education.
+
+\hypertarget{question-4}{%
+\subsection{Question 4}\label{question-4}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{white }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{sex }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2))}\OperatorTok{$}\NormalTok{coefficient)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 1.1530248 & 0.0320641 & 35.959958 &
+0.0000000\tabularnewline
+white & -0.0214552 & 0.0129493 & -1.656865 & 0.0975529\tabularnewline
+black & -0.1340282 & 0.0168742 & -7.942800 & 0.0000000\tabularnewline
+sexMale & 0.1875892 & 0.0080700 & 23.245342 & 0.0000000\tabularnewline
+educ & 0.1057297 & 0.0014885 & 71.032201 & 0.0000000\tabularnewline
+exper & 0.0169517 & 0.0015935 & 10.637776 & 0.0000000\tabularnewline
+exper2 & -0.0002535 & 0.0000317 & -7.995401 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+The regression result shows that after controling for sex and race, the
+coefficient on education becomes more significant. Also, the sex and age
+variable themselves are significantly correlated with wage. This
+indicates that sex and age differences also explains variations in wage
+return of education and they also explains wage differences.
+
+\hypertarget{question-5}{%
+\subsection{Question 5}\label{question-5}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{l =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{white }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{sex }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2))}\OperatorTok{$}\NormalTok{coefficient}
+\NormalTok{white_coef =}\StringTok{ }\NormalTok{l[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\NormalTok{white_se =}\StringTok{ }\NormalTok{l[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{]}
+\NormalTok{male_coef =}\StringTok{ }\NormalTok{l[}\DecValTok{4}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\NormalTok{male_sd =}\StringTok{ }\NormalTok{l[}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{]}
+\NormalTok{se =}\StringTok{ }\NormalTok{(white_se}\OperatorTok{^}\DecValTok{2}\OperatorTok{+}\NormalTok{male_sd}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{^}\FloatTok{0.5}
+\NormalTok{t_score =}\StringTok{ }\NormalTok{(white_coef }\OperatorTok{-}\StringTok{ }\NormalTok{male_coef)}\OperatorTok{/}\NormalTok{se}
+\KeywordTok{print}\NormalTok{(t_score)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -13.70059
+\end{verbatim}
+
+As the result shows, t statistics is way greater than 1.96, therefore
+the differnece is significant.
+
+\hypertarget{question-6}{%
+\subsection{Question 6}\label{question-6}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cps_male =}\StringTok{ }\NormalTok{cps[cps}\OperatorTok{$}\NormalTok{sex }\OperatorTok{==}\StringTok{ "Male"}\NormalTok{,]}
+\NormalTok{cps_female =}\StringTok{ }\NormalTok{cps[cps}\OperatorTok{$}\NormalTok{sex }\OperatorTok{==}\StringTok{ "Female"}\NormalTok{,]}
+\NormalTok{ml =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps_male, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{white }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2))}\OperatorTok{$}\NormalTok{coefficient}
+\NormalTok{fl =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps_female, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{white }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2))}\OperatorTok{$}\NormalTok{coefficient}
+\KeywordTok{print}\NormalTok{(}\StringTok{"Regression results for males"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Regression results for males"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(ml)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 1.3543112 & 0.0446224 & 30.350502 &
+0.0000000\tabularnewline
+white & -0.0269620 & 0.0188256 & -1.432198 & 0.1520979\tabularnewline
+black & -0.1629416 & 0.0255723 & -6.371796 & 0.0000000\tabularnewline
+educ & 0.1026864 & 0.0020453 & 50.206012 & 0.0000000\tabularnewline
+exper & 0.0208734 & 0.0023426 & 8.910550 & 0.0000000\tabularnewline
+exper2 & -0.0003353 & 0.0000461 & -7.279945 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Regression results for females"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Regression results for females"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(fl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 1.1138004 & 0.0436557 & 25.5132882 &
+0.0000000\tabularnewline
+white & -0.0167805 & 0.0171791 & -0.9767937 & 0.3286818\tabularnewline
+black & -0.1068967 & 0.0214618 & -4.9807839 & 0.0000006\tabularnewline
+educ & 0.1106325 & 0.0021375 & 51.7574453 & 0.0000000\tabularnewline
+exper & 0.0122206 & 0.0020913 & 5.8434101 & 0.0000000\tabularnewline
+exper2 & -0.0001500 & 0.0000422 & -3.5521645 & 0.0003829\tabularnewline
+\bottomrule
+\end{longtable}
+
+Although there is no way to synthesize the standard error of the two
+coefficients of male and female since the samples are innately
+different, we can use bootstrap to determine the standard deviation of
+the difference between the two samples.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Construct a bootstrap engine}
+\NormalTok{dl_list =}\StringTok{ }\KeywordTok{vector}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{1000}\NormalTok{)\{}
+\NormalTok{  cps_male_sample =}\StringTok{ }\NormalTok{cps_male[}\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(cps_male)[}\DecValTok{1}\NormalTok{], }\DecValTok{1000}\NormalTok{, }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{),]}
+\NormalTok{  cps_female_sample =}\StringTok{ }\NormalTok{cps_male[}\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(cps_female)[}\DecValTok{1}\NormalTok{], }\DecValTok{1000}\NormalTok{, }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{),]}
+\NormalTok{  ml =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps_male_sample, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{white }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2))}\OperatorTok{$}\NormalTok{coefficient}
+\NormalTok{  fl =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps_female_sample, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{white }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2))}\OperatorTok{$}\NormalTok{coefficient}
+\NormalTok{  dl =}\StringTok{ }\NormalTok{ml }\OperatorTok{-}\StringTok{ }\NormalTok{fl}
+\NormalTok{  dl_list =}\StringTok{ }\KeywordTok{c}\NormalTok{(dl_list, dl)}
+\NormalTok{\}}
+\KeywordTok{hist}\NormalTok{(dl, }\DataTypeTok{breaks =} \DecValTok{50}\NormalTok{, }\DataTypeTok{main =} \StringTok{"Distribution of the coefficient difference"}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"Coefficient difference"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW1_files/figure-latex/Q6b-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\StringTok{"Mean Difference: "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(dl)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Mean Difference: -0.116987640390738"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\StringTok{"Difference SE: "}\NormalTok{, }\KeywordTok{sd}\NormalTok{(dl)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Difference SE: 0.74265257887611"
+\end{verbatim}
+
+As shown in the bootstap result, the difference is not sigificant.
+Therefore, the education returns in male and female seperately are not
+statistically significant.
+
+\hypertarget{question-7}{%
+\subsection{Question 7}\label{question-7}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cps}\OperatorTok{$}\NormalTok{male =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{as.factor}\NormalTok{(cps}\OperatorTok{$}\NormalTok{sex)) }\OperatorTok{-}\StringTok{ }\DecValTok{1}
+\NormalTok{interact_l =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cps, hwage }\OperatorTok{~}\StringTok{ }\NormalTok{white }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }\NormalTok{exper }\OperatorTok{+}\StringTok{ }\NormalTok{exper2 }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(male}\OperatorTok{*}\NormalTok{educ)))}\OperatorTok{$}\NormalTok{coefficient}
+\KeywordTok{kable}\NormalTok{(interact_l)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 1.2723547 & 0.0315085 & 40.381267 &
+0.0000000\tabularnewline
+white & -0.0202005 & 0.0129536 & -1.559453 & 0.1188954\tabularnewline
+black & -0.1343747 & 0.0168809 & -7.960163 & 0.0000000\tabularnewline
+educ & 0.0980912 & 0.0014953 & 65.598967 & 0.0000000\tabularnewline
+exper & 0.0169183 & 0.0015942 & 10.612222 & 0.0000000\tabularnewline
+exper2 & -0.0002541 & 0.0000317 & -8.011397 & 0.0000000\tabularnewline
+I(male * educ) & 0.0121233 & 0.0005409 & 22.414143 &
+0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+The result got from Q7 is the same the one from Q6. This suggests that
+the results got from bootstap and interaction variable are the same.
+
+\hypertarget{question-8}{%
+\subsection{Question 8}\label{question-8}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Display data}
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{head}\NormalTok{(nlsy[,}\DecValTok{1}\OperatorTok{:}\DecValTok{8}\NormalTok{]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rrrrrrrr@{}}
+\toprule
+age79 & foreign & urban14 & mag14 & news14 & lib14 & educ\_mom &
+educ\_dad\tabularnewline
+\midrule
+\endhead
+20 & 1 & 1 & 0 & 1 & 1 & 8 & 8\tabularnewline
+20 & 1 & 1 & 1 & 1 & 1 & 5 & 8\tabularnewline
+17 & 0 & 1 & 1 & 1 & 1 & 10 & 12\tabularnewline
+16 & 0 & 1 & 1 & 1 & 0 & 11 & 12\tabularnewline
+19 & 0 & 1 & 1 & 1 & 1 & 12 & 12\tabularnewline
+18 & 0 & 1 & 0 & 1 & 1 & 12 & 12\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Unweighted summary}
+\NormalTok{black =}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(nlsy}\OperatorTok{$}\NormalTok{black)}
+\NormalTok{hisp =}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(nlsy}\OperatorTok{$}\NormalTok{hisp)}
+
+\NormalTok{black_mean =}\StringTok{ }\KeywordTok{sum}\NormalTok{(black, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{length}\NormalTok{(black)}
+\NormalTok{hisp_mean =}\StringTok{ }\KeywordTok{sum}\NormalTok{(hisp, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{length}\NormalTok{(hisp)}
+
+\NormalTok{black_sd =}\StringTok{ }\NormalTok{((black_mean }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{black_mean))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(black))}\OperatorTok{^}\FloatTok{0.5}
+\NormalTok{hisp_sd =}\StringTok{ }\NormalTok{((hisp_mean }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{hisp_mean))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(hisp))}\OperatorTok{^}\FloatTok{0.5}
+
+
+\CommentTok{#Weighted summary}
+\NormalTok{black_mean_weight =}\StringTok{ }\KeywordTok{sum}\NormalTok{(black}\OperatorTok{*}\NormalTok{nlsy}\OperatorTok{$}\NormalTok{perweight, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(nlsy}\OperatorTok{$}\NormalTok{perweight)}
+\NormalTok{hisp_mean_weight =}\StringTok{ }\KeywordTok{sum}\NormalTok{(hisp}\OperatorTok{*}\NormalTok{nlsy}\OperatorTok{$}\NormalTok{perweight, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(nlsy}\OperatorTok{$}\NormalTok{perweight)}
+
+\NormalTok{black_sd_weight =}\StringTok{ }\NormalTok{((black_mean_weight }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{black_mean_weight))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(black))}\OperatorTok{^}\FloatTok{0.5}
+\NormalTok{hisp_sd_weight =}\StringTok{ }\NormalTok{((hisp_mean_weight }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{hisp_mean_weight))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(hisp))}\OperatorTok{^}\FloatTok{0.5}
+
+\NormalTok{Q8 =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}
+  \DataTypeTok{black_mean =} \KeywordTok{sum}\NormalTok{(black, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{length}\NormalTok{(black),}
+  \DataTypeTok{hisp_mean =} \KeywordTok{sum}\NormalTok{(hisp, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{length}\NormalTok{(hisp),}
+  
+  \DataTypeTok{black_sd =}\NormalTok{ ((black_mean }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{black_mean))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(black))}\OperatorTok{^}\FloatTok{0.5}\NormalTok{,}
+  \DataTypeTok{hisp_sd =}\NormalTok{ ((hisp_mean }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{hisp_mean))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(hisp))}\OperatorTok{^}\FloatTok{0.5}\NormalTok{,}
+  
+  
+  \CommentTok{#Weighted summary}
+  \DataTypeTok{black_mean_weight =} \KeywordTok{sum}\NormalTok{(black}\OperatorTok{*}\NormalTok{nlsy}\OperatorTok{$}\NormalTok{perweight, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(nlsy}\OperatorTok{$}\NormalTok{perweight),}
+  \DataTypeTok{hisp_mean_weight =} \KeywordTok{sum}\NormalTok{(hisp}\OperatorTok{*}\NormalTok{nlsy}\OperatorTok{$}\NormalTok{perweight, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(nlsy}\OperatorTok{$}\NormalTok{perweight),}
+  
+  \DataTypeTok{black_sd_weight =}\NormalTok{ ((black_mean_weight }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{black_mean_weight))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(black))}\OperatorTok{^}\FloatTok{0.5}\NormalTok{,}
+  \DataTypeTok{hisp_sd_weight =}\NormalTok{ ((hisp_mean_weight }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{hisp_mean_weight))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(hisp))}\OperatorTok{^}\FloatTok{0.5}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(Q8)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rrrrrrrr@{}}
+\toprule
+black\_mean & hisp\_mean & black\_sd & hisp\_sd & black\_mean\_weight &
+hisp\_mean\_weight & black\_sd\_weight & hisp\_sd\_weight\tabularnewline
+\midrule
+\endhead
+0.2501971 & 0.1578118 & 0.0038455 & 0.0032368 & 0.1418509 & 0.0654364 &
+0.0030977 & 0.0021956\tabularnewline
+\bottomrule
+\end{longtable}
+
+The weighted summary better discribes the population ratio becuase in
+the unweighted sampings, due to the fact that black and hispanics are
+Ethnic minorities, they are upsampled and therefore over-represented
+Considering weight can eliminate the differences.
+
+\hypertarget{question-9}{%
+\subsection{Question 9}\label{question-9}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hour_wage =}\StringTok{ }\KeywordTok{log}\NormalTok{(nlsy}\OperatorTok{$}\NormalTok{laborinc07}\OperatorTok{/}\NormalTok{nlsy}\OperatorTok{$}\NormalTok{hours07)}
+\NormalTok{hour_wage[hour_wage }\OperatorTok{==}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}\NormalTok{] =}\StringTok{ }\DecValTok{0}
+
+\NormalTok{experience =}\StringTok{ }\NormalTok{nlsy}\OperatorTok{$}\NormalTok{age79 }\OperatorTok{+}\StringTok{ }\DecValTok{28} \OperatorTok{-}\StringTok{ }\NormalTok{nlsy}\OperatorTok{$}\NormalTok{educ }\OperatorTok{-}\StringTok{ }\DecValTok{5}
+
+\NormalTok{nlsy_plus =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(nlsy, experience, hour_wage)}
+\NormalTok{nlsy_plus =}\StringTok{ }\KeywordTok{subset}\NormalTok{(nlsy_plus, hours07 }\OperatorTok{>}\StringTok{ }\DecValTok{1750}\NormalTok{)}
+\NormalTok{nlsy_plus =}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(nlsy_plus)}
+
+\KeywordTok{rm}\NormalTok{(experience, hour_wage)}
+
+\CommentTok{# For black}
+\KeywordTok{print}\NormalTok{(}\StringTok{"Unweighted summary for the black"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Unweighted summary for the black"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ nlsy_plus, hour_wage }\OperatorTok{~}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\KeywordTok{I}\NormalTok{(experience}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\NormalTok{experience }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{male))}\OperatorTok{$}\NormalTok{coefficient)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 2.7016775 & 0.6577952 & 4.107171 &
+0.0000409\tabularnewline
+educ & 0.1255954 & 0.0084000 & 14.951855 & 0.0000000\tabularnewline
+I(experience\^{}2) & 0.0026465 & 0.0008244 & 3.210304 &
+0.0013369\tabularnewline
+experience & -0.1342427 & 0.0448467 & -2.993366 &
+0.0027769\tabularnewline
+black & -0.2188915 & 0.0317476 & -6.894745 & 0.0000000\tabularnewline
+male & 0.2645347 & 0.0278221 & 9.508090 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Weighted summary for the black"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Weighted summary for the black"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ nlsy_plus, hour_wage }\OperatorTok{~}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\KeywordTok{I}\NormalTok{(experience}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\NormalTok{experience }\OperatorTok{+}\StringTok{ }\NormalTok{black }\OperatorTok{+}\StringTok{ }\NormalTok{male, }\DataTypeTok{weights =}\NormalTok{ perweight))}\OperatorTok{$}\NormalTok{coefficient)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 2.3082053 & 0.6918313 & 3.336370 &
+0.0008569\tabularnewline
+educ & 0.1304702 & 0.0082055 & 15.900332 & 0.0000000\tabularnewline
+I(experience\^{}2) & 0.0023259 & 0.0008866 & 2.623437 &
+0.0087394\tabularnewline
+experience & -0.1136084 & 0.0478590 & -2.373817 &
+0.0176545\tabularnewline
+black & -0.2308859 & 0.0447666 & -5.157550 & 0.0000003\tabularnewline
+male & 0.3060472 & 0.0279673 & 10.943041 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# For Hispanic}
+\KeywordTok{print}\NormalTok{(}\StringTok{"Unweighted summary for the hispanic"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Unweighted summary for the hispanic"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ nlsy_plus, hour_wage }\OperatorTok{~}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\KeywordTok{I}\NormalTok{(experience}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\NormalTok{experience }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{male))}\OperatorTok{$}\NormalTok{coefficient)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 2.8177221 & 0.6630552 & 4.2496040 &
+0.0000219\tabularnewline
+educ & 0.1273055 & 0.0084832 & 15.0067059 & 0.0000000\tabularnewline
+I(experience\^{}2) & 0.0029466 & 0.0008290 & 3.5543455 &
+0.0003835\tabularnewline
+experience & -0.1501018 & 0.0451024 & -3.3280229 &
+0.0008829\tabularnewline
+hisp & 0.0238112 & 0.0375895 & 0.6334539 & 0.5264752\tabularnewline
+male & 0.2765659 & 0.0279506 & 9.8948241 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Weighted summary for the hispanic"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Weighted summary for the hispanic"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ nlsy_plus, hour_wage }\OperatorTok{~}\StringTok{ }\NormalTok{educ }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\KeywordTok{I}\NormalTok{(experience}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{                   }\NormalTok{experience }\OperatorTok{+}\StringTok{ }\NormalTok{hisp }\OperatorTok{+}\StringTok{ }\NormalTok{male, }\DataTypeTok{weights =}\NormalTok{ perweight))}\OperatorTok{$}\NormalTok{coefficient)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 2.3432575 & 0.6946602 & 3.3732429 &
+0.0007503\tabularnewline
+educ & 0.1317033 & 0.0082426 & 15.9783250 & 0.0000000\tabularnewline
+I(experience\^{}2) & 0.0024453 & 0.0008896 & 2.7487750 &
+0.0060100\tabularnewline
+experience & -0.1198860 & 0.0480238 & -2.4963905 &
+0.0125883\tabularnewline
+hisp & 0.0041861 & 0.0625679 & 0.0669041 & 0.9466615\tabularnewline
+male & 0.3130156 & 0.0280345 & 11.1653726 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+The usage of sampling weight can slightly change the coefficient and
+increase the standard error of the statistics. However, Weighted
+regression is preferred because it takes consideration of the Over
+sampling of minority populations such as hispanic or black. Therefore, I
+prefer the weighted regression.
+
+\hypertarget{question-10}{%
+\subsection{Question 10}\label{question-10}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ nlsy_plus, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ experience, }\DataTypeTok{y =}\NormalTok{ hour_wage)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Experience"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Log(Hourly Wage)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW1_files/figure-latex/Q10-1.pdf}
+
+The coefficient of education obtained from NLSY is similar to the
+coefficient of education obtained from CPS. Both are similar to around
+0.13. However, the coefficients of experience and experience\^{}2 are
+different acrosstwo datasets. Particularly, the coefficients from NLSY
+is negative, which is realistically unlikely. This suggests that either:
+- The two samples are innately different in terms of populaiton
+component - The way how part-time workers and non-working force are
+excluded influences the result. In NLSY, workers who work for less than
+1750 hours are dropped however in CPS, workers who work less than 35
+hours per week or less than 50 weeks per year are dropped.
+
+\hypertarget{question-11}{%
+\subsection{Question 11}\label{question-11}}
+
+I think \(\beta_1\) does not represent the causal effect of education.
+This is because although the correlation between education and hour wage
+is found to be significant. There is no evidence indicating causality.
+In fact, there may be many other variables correlated with both
+education and wage that are ommited in this regression For instance,
+family income is traditionally believed to be correlated with education
+because richer households tend to afford more education. Wealth status
+is also related to wage given that difference in parents' income may
+suggest difference in access to resources. Therefore, we cannot prove
+that the regression is not subjective to ommited variable bias and we
+cannot determin causal correlation.
+
+\hypertarget{question-12}{%
+\subsection{Question 12}\label{question-12}}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 2.7527504 & 0.6590189 & 4.177043 &
+0.0000302\tabularnewline
+educ & 0.1245644 & 0.0084399 & 14.758978 & 0.0000000\tabularnewline
+I(experience\^{}2) & 0.0026805 & 0.0008248 & 3.249907 &
+0.0011644\tabularnewline
+experience & -0.1361035 & 0.0448682 & -3.033405 &
+0.0024344\tabularnewline
+black & -0.2298632 & 0.0329400 & -6.978241 & 0.0000000\tabularnewline
+hisp & -0.0483787 & 0.0387629 & -1.248066 & 0.2120835\tabularnewline
+male & 0.2630655 & 0.0278449 & 9.447518 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& Estimate & Std. Error & t value &
+Pr(\textgreater{}\textbar{}t\textbar{})\tabularnewline
+\midrule
+\endhead
+(Intercept) & 3.7232917 & 0.6551837 & 5.682821 &
+0.0000000\tabularnewline
+educ & 0.0662963 & 0.0098559 & 6.726588 & 0.0000000\tabularnewline
+I(experience\^{}2) & 0.0030033 & 0.0008127 & 3.695461 &
+0.0002226\tabularnewline
+experience & -0.1672974 & 0.0442697 & -3.779045 &
+0.0001598\tabularnewline
+black & -0.0424899 & 0.0370793 & -1.145918 & 0.2519008\tabularnewline
+hisp & 0.0709117 & 0.0403266 & 1.758437 & 0.0787533\tabularnewline
+male & 0.2288108 & 0.0275976 & 8.290959 & 0.0000000\tabularnewline
+urban14 & 0.0660547 & 0.0331545 & 1.992329 & 0.0464061\tabularnewline
+afqt81 & 0.0073370 & 0.0006767 & 10.843085 & 0.0000000\tabularnewline
+\bottomrule
+\end{longtable}
+
+I think living at urban places at the age of 14 and AFQT should be
+included in the regression. As the statistics shows, the coefficients of
+both Urban14 and AFQT81 are significant. As an explaination, the AFQT
+score is a good indicator of one's cognitive ability and should be
+correlated with earning, since we expect smart people to earn more. Also
+living in urban environment at a early age can be significant to access
+to resource and education quality. Therefore, I expect these two factors
+to be added to the regression.
+
+\hypertarget{question-13}{%
+\subsection{Question 13}\label{question-13}}
+
+In a natural experiment or survey setting, it's hard for OLS to indicate
+causal relationship because non of the conditons are randomly assigned.
+Therefore, it is hard to include/control all the variables that are
+potentially correlated with the error term. The coefficients are thus
+only good for passvie prediction but not causation.
+
+\end{document}
