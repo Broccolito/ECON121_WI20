@@ -1,0 +1,191 @@
+---
+title: "Problem Set 3"
+author: "Wanjun Gu"
+date: "2/20/2020"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+suppressPackageStartupMessages({
+  library(readstata13)
+  library(ggplot2)
+  library(gridExtra)
+  library(margins)
+  library(knitr)
+  library(MASS)
+  library(lme4)
+  library(nlme)
+  library(plm)
+})
+graphics.off()
+rm(list = ls())
+
+suppressWarnings({
+  nd = read.dta13(file = "nlsy_deming.dta", nonint.factors = TRUE)
+  source('data_description.R')
+})
+```
+
+## Q1
+
+```{r Q1, include=TRUE}
+get_sd = function(x){
+  x = na.omit(x)
+  if(length(unique(x)) == 2){
+    return(((mean(x)*(1-mean(x)))/length(x))^0.5)
+  }else{
+    return(sd(x))
+  }
+}
+sum_nd = rbind.data.frame(apply(nd, 2, mean, na.rm = TRUE),
+                          apply(nd, 2, get_sd))
+colnames(sum_nd) = names(nd)
+rownames(sum_nd) = c("Mean", "Std")
+print(sum_nd)
+
+nd_head_start = nd[nd$head_start == 1,]
+sum_nd_head_start = rbind.data.frame(apply(nd_head_start, 2, mean, na.rm = TRUE),
+                                     apply(nd_head_start, 2, get_sd))
+colnames(sum_nd_head_start) = names(nd)
+rownames(sum_nd_head_start) = c("Mean", "Std")
+print(sum_nd_head_start)
+
+diff_df = sum_nd_head_start - sum_nd
+diff_df[2,] = (sum_nd[2,]^2 + sum_nd_head_start[2,]^2)^0.5
+print(diff_df)
+```
+
+As we can see from the comparison result: 
+<br> - Children who participate in the head start program tend to attend different high school from their siblings do. 
+<br> - There tend to be fewer Hispanics, but the difference is not significant. 
+<br> - There tend to be more attendee with African American ancestry. 
+<br> - More attendees are males. 
+<br> - More attendees are first born. 
+<br> - They tend to come from families with lower income. 
+<br> - They tend to have mothers with lower education level.
+<br> - They tend to not live with their fathers during early ages.
+<br> - Etc
+<br> In general, they tend to come from more handicap families with lower income, less parental care and low parent education and social status
+
+
+## Q2
+
+```{r Q2, include=TRUE}
+fm2 = comp_score_5to6 ~ head_start
+lm2 = rlm(formula = fm2, data = nd)
+kable(summary(lm2)$coefficient)
+```
+
+If we assume the effect of test scores during the age of five to six is exogenous, then we will be confidently concluding that joining the head start program has a negative impact on test scores (p << 0.001). However, this conclusion does not make much logical sense because as much as the head start program can be unimpactful, it should do no harm to participants grades. This means that there are some other omitted variables that further dictate participants’ grades. Thus, head start participation is not exogenous.
+
+## Q3
+
+```{r Q3, include=TRUE}
+fm3 = comp_score_5to6 ~ head_start + (1|mom_id)
+lm3 = lmer(fm3, data = nd, REML=TRUE)
+kable(summary(lm3)$coefficient)
+```
+
+Considering the random effect of different mother makes the coefficient on head start participation less significant. To be more specific, considering mom education level decreases the coefficient of the head start program participation. This result means that to some degree, mom education level has effect on the test scores and head start program participation. Hence, we are even less confident about announcing the negative causal effect of head start on test scores.
+
+## Q4
+
+```{r Q4, include=TRUE}
+fm4.1 = comp_score_5to6 ~ head_start + factor(mom_id)
+fm4.2 = comp_score_5to6 ~ head_start + factor(mom_id) + 
+  hispanic + black + firstborn + lninc_0to3 + 
+  momed + dadhome_0to3
+
+lm4.1 = lm(fm4.1, data = nd)
+lm4.2 = lm(fm4.2, data = nd)
+kable(summary(lm4.1)$coefficient[1:2,])
+kable(summary(lm4.2)$coefficient[1:2,])
+```
+
+In order to take account of fixed effects, we can only include pre-head start variables. In addition, the variables should logically have an impact on the test score. In other words, the variables should be confounding variables instead of mediating variables. In this case, variables taking account of race, parental care and education and sibling status are the ones that we should including. Changes that happens later in the children’s lives should be excluded.
+
+As we use a simple fixed effect model to consider the fixed effect of different mothers, the coefficient on head start dramatically increases, from significantly negative to significantly positive. This result indicates that after controlling for fixed effect of different mothers, participating the head start program is proved to have a positive influence on children’s grades.
+
+Furthermore, as we control pre-Head Start variables, the coefficient on head start drops to a smaller positive value. This indicates that race, parental care and education and sibling status can also explain some variations within different mother groups.
+
+The fixed effect estimator is drastically different from the random effect estimator. With that said, both models, compared to OLS, increases the coefficient of head start. This means that the effect of head-start on test score predicted by OLS is far from being causal. The discrepancies between RE and FE are likely caused by heteroskedasticity in mother groups. As a result, some family groups with higher odd ratios are severely under-weighted.
+
+## Q5
+
+```{r Q5, include=TRUE}
+to_z = function(x){
+  return((x - mean(x, na.rm = TRUE))/sd(x, na.rm = TRUE))
+}
+nd$zscore_5to6 = to_z(nd$comp_score_5to6)
+nd$zscore_7to10 = to_z(nd$comp_score_7to10)
+nd$zscore_11to14 = to_z(nd$comp_score_11to14)
+fm5.1 = zscore_5to6 ~ head_start + factor(mom_id) 
+fm5.2 = zscore_7to10 ~ head_start + factor(mom_id) 
+fm5.3 = zscore_11to14 ~ head_start + factor(mom_id)
+lm5.1 = lm(fm5.1, data = nd)
+lm5.2 = lm(fm5.2, data = nd)
+lm5.3 = lm(fm5.3, data = nd)
+kable(summary(lm5.1)$coefficient[1:2,])
+kable(summary(lm5.2)$coefficient[1:2,])
+kable(summary(lm5.3)$coefficient[1:2,])
+```
+
+As the result shows, the positive effect of head start program on test scores when controlling for fixed effect is fading as time progresses. The coefficient on head start is decreasing over time and the significance of the coefficients is decreasing as well. However, what should be noted is that as time progresses, there may be more and more factors that can potentially impact test scores which are not taken into the model. To further determine if the effect of head start program is fading or not, more data needs to be gathered on the subjects about their later development.
+
+## Q6
+
+```{r Q6, include=TRUE}
+nd$repeat_grade = nd$`repeat`
+fm6.1 = repeat_grade ~ head_start + factor(mom_id)
+fm6.2 = learndis ~ head_start + factor(mom_id)
+fm6.3 = hsgrad ~ head_start + factor(mom_id)
+fm6.4 = somecoll ~ head_start + factor(mom_id)
+fm6.5 = idle ~ head_start + factor(mom_id)
+fm6.6 = fphealth ~ head_start + factor(mom_id)
+fm6.7 = nd ~ head_start + factor(mom_id)
+lm6.1 = lm(fm6.1, data = nd)
+lm6.2 = lm(fm6.2, data = nd)
+lm6.3 = lm(fm6.3, data = nd)
+lm6.4 = lm(fm6.4, data = nd)
+lm6.5 = lm(fm6.5, data = nd)
+lm6.6 = lm(fm6.6, data = nd)
+kable(summary(lm6.1)$coefficient[1:2,])
+kable(summary(lm6.2)$coefficient[1:2,])
+kable(summary(lm6.3)$coefficient[1:2,])
+kable(summary(lm6.4)$coefficient[1:2,])
+kable(summary(lm6.5)$coefficient[1:2,])
+kable(summary(lm6.6)$coefficient[1:2,])
+```
+
+More regressions suggest that joining the head start program is beneficial to children’s growth even in terms of long-term outcomes. The benefits include less chances of repeating the same grade, less chances of suffering from learning disabilities, higher chances of graduating high school successfully, higher chances of attending and graduating from colleges and ultimately better self-reported health conditions.
+
+## Q7
+
+```{r Q7, include=TRUE}
+fm6.1 = repeat_grade ~ head_start + hispanic + black + male + factor(mom_id)
+fm6.2 = learndis ~ head_start + hispanic + black + male + factor(mom_id)
+fm6.3 = hsgrad ~ head_start + hispanic + black + male + factor(mom_id)
+fm6.4 = somecoll ~ head_start + hispanic + black + male + factor(mom_id)
+fm6.5 = idle ~ head_start + hispanic + black + male + factor(mom_id)
+fm6.6 = fphealth ~ head_start + hispanic + black + male + factor(mom_id)
+fm6.7 = nd ~ head_start + hispanic + black + male + factor(mom_id)
+lm6.1 = lm(fm6.1, data = nd)
+lm6.2 = lm(fm6.2, data = nd)
+lm6.3 = lm(fm6.3, data = nd)
+lm6.4 = lm(fm6.4, data = nd)
+lm6.5 = lm(fm6.5, data = nd)
+lm6.6 = lm(fm6.6, data = nd)
+kable(summary(lm6.1)$coefficient[1:2,])
+kable(summary(lm6.2)$coefficient[1:2,])
+kable(summary(lm6.3)$coefficient[1:2,])
+kable(summary(lm6.4)$coefficient[1:2,])
+kable(summary(lm6.5)$coefficient[1:2,])
+kable(summary(lm6.6)$coefficient[1:2,])
+```
+
+Regression results show that gender and race have little effect on the coefficients of head start in models predicting long-term outcomes. This suggests that the benefits that head start programs have may be universal, regardless of gender and race.
+
+## Q8
+
+The result of this study advocates an expansion of early-childhood education programs. This is supported by the positive effects of the head-start program on variables indicating test-scores and long-term success (negative effects of head-start program on variables indicating long-term drawbacks). However, the data used in this study is likely insufficient to predict the effect of an expansion of early-childhood education programs. This is because the model explains very little of the variations of either test scores or long-term success markers. To better assess the effect of the programs, we need to collect more comprehensive data.
